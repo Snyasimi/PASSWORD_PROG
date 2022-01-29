@@ -1,6 +1,9 @@
 import random
 import string
 import os
+import smtplib
+from email.message import EmailMessage
+
 
 numbers = string.digits
 letters = string.ascii_lowercase
@@ -8,8 +11,55 @@ upper = string.ascii_uppercase
 all = numbers + letters + upper + string.punctuation
 
 Home_dir = os.getcwd()
-
+#TODO get email adress
 #TODO validate user input to avoid breaking of program
+
+def SendMail(msgc):
+    #TODO set email and  password as env variables
+
+    email_adress = "stevesolomon1229"
+    epassword = ""
+    msg=EmailMessage()
+    msg["Subject"] = "REQUESTED PASSWORDS"
+    msg["From"] = email_adress
+    msg["To"] = EMAIL_ADRESS
+    msg.set_content(msgc)
+
+
+    with smtplib.SMTP_SSL("smtp.gmail.com","465") as smtp:
+        smtp.login(email_adress,epassword)
+        smtp.send(msg)
+
+def sendPassword(name):
+    """takes the name dir and file type and sends it to a specified email
+    given buy the user """
+    #TODO add feature to send specific passwords for specific accounts
+
+    #EmailAdress = input("Which email would you like the passwords to be sent to?\n")
+
+    GenOrSaved = input("Which passwords would you like to send,Generated or Saved..\nPlease select (G) or (S)\n").lower()
+    
+    #OPEN FILES AND DIRS FOR THE PASSWORD
+    
+    if name in Home_dir:
+        os.chdir(name)
+        if GenOrSaved == "g":
+            with open(f"{name}.txt","r") as f:
+
+                contents = f.read()
+            return contents
+        elif GenOrSaved == "s":
+            with open ("pass_added.txt","r")as f:
+
+                contents = f.read()
+            return contents
+        else :
+            print("please choose either G or S\n....Restarting....\n")
+    else:
+        print(f"{name} You have no passwords saved")
+
+
+
 
 
 def view_passwords(name):
@@ -166,7 +216,7 @@ prompt = input("HELLO USER PLEASE ENTER ANY VALUE FOR OPTION\n....PRESS Q TO QUI
 while prompt != "q":
     name = input("PLEASE STATE YOUR NAME\n")
 
-    input_option = input("PRESS (A) TO ADD PASSWORD\nPRESS (V) TO VIEW PASSWORDS\nPRESS (G) TO GENERATE PASSWORDS\nPRESS (S) TO SAVE PASSWORDS\n PRESS (Q) TO QUIT PROGRAM\n").lower()
+    input_option = input("PRESS (A) TO ADD PASSWORD\nPRESS (V) TO VIEW PASSWORDS\nPRESS (G) TO GENERATE PASSWORDS\nPRESS (S) TO SAVE PASSWORDS\n PRESS (SM) TO SEND SAVED PASSWORDS TO YOUR EMAIL\nPRESS (Q) TO QUIT PROGRAM\n").lower()
 
     #name = print("PLEASE ENTER YOUR NAME\n")
     
@@ -176,10 +226,17 @@ while prompt != "q":
     if input_option == "a":
         find_folder_and_make(name)
 
-        added_password = input("Which password would you like to add or save\n")
-        add__pass(name,added_password)
-        print("Password added.....\n")
-        os.chdir(Home_dir)
+        NO_OF_ADDED_PASSWD = int(input("How many passwords would you like to save?\n"))
+    
+
+
+        for passw in range(NO_OF_ADDED_PASSWD):
+
+            added_password = input("Which password would you like to add or save\n")
+    
+            add__pass(name,added_password)
+            print("Password added.....\n")
+            os.chdir(Home_dir)
 
 
     elif input_option =="v":
@@ -211,12 +268,13 @@ while prompt != "q":
         except ValueError:
             print("PLEASE ENTER THE SPECIFIED INPUTS")
 
-    elif input_option == "s":
-        find_folder_and_make(name)
-        added_password = input("Which password would you like to save?\n")
-        
-        add__pass(name,added_password)
+    
+    elif input_option == "sm":
+        EMAIL_ADRESS = input("Enter Your Email Adress\n ")
 
+        SendMail(sendPassword(name))
+        print("Sending Email....\nPlease wait")
+        os.chdir(Home_dir)
 
     elif input_option == "q":
         break
