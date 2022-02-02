@@ -193,18 +193,8 @@ def unique_passwords():
     with open(f"{name}.txt", "a") as f:
         f.write(name + " " + pass_prompt + acc + " is " + p_sch + "\n")
         #os.chdir(Home_dir)
-
-
-def validate(user_input):
-    """this function takes in the user inputs and makes sure that the 
-    user did not type a zero """
-
-    #TODO validate the user  input to see if they are digits
-
-    if user_input < 0:
-
-        return "Please enter a number more than 0"
     
+
 
 
 
@@ -251,23 +241,28 @@ while prompt != "q":
         number_of_passwords = input("How many passwords do you need?\n")
 
         USER_PASS_LENGTH = int(input("How long would you like the passwords to be?\n"))
+        
+        #validate if either of the inputs are digit
+        
+        if number_of_passwords.isdigit() and USER_PASS_LENGTH.isdigit():
+          
+            type_of_password = input("If you wish for the characters  of the password to be unique please press (U)..else some characters will be REPEATED\n")
+            try:
+                for i in range(int(number_of_passwords)):
+                    if type_of_password == "u":
+                        unique_passwords()
+                        #os.chdir(Home_dir)
 
-        type_of_password = input("If you wish for the characters  of the password to be unique please press (U)..else some characters will be REPEATED\n")
-        try:
-            for i in range(int(number_of_passwords)):
-                if type_of_password == "u":
-                    unique_passwords()
-                    #os.chdir(Home_dir)
+                    else:
+                        make_password()
+                        #os.chdir(Home_dir)
 
-                else:
-                    make_password()
-                    #os.chdir(Home_dir)
+                os.chdir(Home_dir)
 
-            os.chdir(Home_dir)
-
-        except ValueError:
-            print("PLEASE ENTER THE SPECIFIED INPUTS")
-
+            except ValueError:
+                print("PLEASE ENTER THE SPECIFIED INPUTS")
+        else:
+            print("Please enter digits fro number of passwords and lenght of password")
     
     elif input_option == "sm":
         EMAIL_ADRESS = input("Enter Your Email Adress\n ")
