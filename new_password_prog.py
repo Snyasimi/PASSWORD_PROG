@@ -217,17 +217,18 @@ while prompt != "q":
         find_folder_and_make(name)
 
         NO_OF_ADDED_PASSWD = int(input("How many passwords would you like to save?\n"))
+        
+        if NO_OF_ADDED_PASSWD.isdigit():
+            
+            for passw in range(NO_OF_ADDED_PASSWD):
+
+                added_password = input("Which password would you like to add or save\n")
     
-
-
-        for passw in range(NO_OF_ADDED_PASSWD):
-
-            added_password = input("Which password would you like to add or save\n")
-    
-            add__pass(name,added_password)
-            print("Password added.....\n")
-            os.chdir(Home_dir)
-
+                add__pass(name,added_password)
+                print("Password added.....\n")
+                os.chdir(Home_dir)
+        else:
+            print("ERROR...\nPlease input a digit\n") 
 
     elif input_option =="v":
         
